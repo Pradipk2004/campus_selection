@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3>My Applications</h3>
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Company</th>
+        <th>Status</th>
+        <th>Interview</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for application in applications %}
+      <tr>
+        <td>{{ application.job.title }}</td>
+        <td>{{ application.job.company.name }}</td>
+        <td>{{ application.status|capfirst }}</td>
+        <td>
+          {% if application.interview %}
+            <a href="{% url 'interviews:detail' application.interview.pk %}" class="btn btn-sm btn-primary">
+              View Interview
+            </a>
+          {% else %}
+            <a href="{% url 'recruiters:schedule_interview' application.pk %}" class="btn btn-sm btn-success">
+              Schedule Interview
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center">No applications found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

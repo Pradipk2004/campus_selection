@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">📅 My Scheduled Interviews</h2>
+
+  {% if object_list %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Scheduled At</th>
+            <th>Mode</th>
+            <th>Status</th>
+            <th>Meeting Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for interview in object_list %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ interview.application.job.title }}</td>
+              <td>{{ interview.application.job.company_name }}</td>
+              <td>{{ interview.scheduled_at|date:"d M Y, H:i" }}</td>
+              <td>{{ interview.mode }}</td>
+              <td>
+                {% if interview.status == "Upcoming" %}
+                  <span class="badge bg-warning text-dark">{{ interview.status }}</span>
+                {% elif interview.status == "Completed" %}
+                  <span class="badge bg-success">{{ interview.status }}</span>
+                {% else %}
+                  <span class="badge bg-danger">{{ interview.status }}</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if interview.meeting_link %}
+                  <a href="{{ interview.meeting_link }}" class="btn btn-sm btn-primary" target="_blank">
+                    Join
+                  </a>
+                {% else %}
+                  <span class="text-muted">Not Available</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      You don’t have any scheduled interviews yet.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

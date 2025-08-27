@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">Recruiter Dashboard</h1>
+
+  <div class="row g-4">
+
+    <!-- Jobs Posted Card -->
+    <div class="col-md-3">
+      <div class="card dashboard-card card-jobs text-center h-100">
+        <div class="card-body">
+          <i class="bi bi-briefcase-fill display-4 mb-3 text-primary"></i>
+          <h5 class="card-title">Jobs Posted</h5>
+          <p class="display-6">{{ jobs_count }}</p>
+          <a href="{% url 'recruiters:job_list' %}" class="btn btn-outline-primary btn-sm mt-2">View Jobs</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Card -->
+    <div class="col-md-3">
+      <div class="card dashboard-card card-applications text-center h-100">
+        <div class="card-body">
+          <i class="bi bi-file-earmark-text-fill display-4 mb-3 text-success"></i>
+          <h5 class="card-title">Applications</h5>
+          <p class="display-6">{{ applications_count }}</p>
+          <a href="{% url 'recruiters:job_list' %}" class="btn btn-outline-success btn-sm mt-2">View Applications</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interviews Card -->
+    <div class="col-md-3">
+      <div class="card dashboard-card card-interviews text-center h-100">
+        <div class="card-body">
+          <i class="bi bi-calendar-event-fill display-4 mb-3 text-warning"></i>
+          <h5 class="card-title">Interviews</h5>
+          <p class="display-6">{{ interviews_count }}</p>
+          <a href="{% url 'recruiters:job_list' %}" class="btn btn-outline-warning btn-sm mt-2">Manage Interviews</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Card -->
+    <div class="col-md-3">
+      <div class="card dashboard-card card-chat text-center h-100 position-relative">
+        <div class="card-body">
+          <i class="bi bi-chat-dots-fill display-4 mb-3 text-info"></i>
+          <h5 class="card-title">Messages</h5>
+          {% if unread_messages %}
+            <span class="badge bg-danger badge-notify">{{ unread_messages }}</span>
+          {% endif %}
+          <a href="{% url 'recruiters:chat' %}" class="btn btn-outline-info btn-sm mt-2">Open Chat</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recent Activities Section -->
+  <div class="mt-5">
+    <h4>Recent Activities</h4>
+    <ul class="list-group">
+      {% for activity in recent_activities %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ activity.description }}
+          <span class="text-muted small">{{ activity.timestamp }}</span>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No recent activities.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<style>
+  /* Reuse Student Dashboard card styles */
+  .dashboard-card {
+    cursor: pointer;
+    position: relative;
+    border-radius: 16px;
+    padding: 25px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.5s, box-shadow 0.5s, background-color 0.5s, color 0.5s;
+    animation: float 6s ease-in-out infinite;
+  }
+  .dashboard-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.35); }
+  .dashboard-card i { transition: transform 0.3s; }
+  .dashboard-card:hover i { transform: scale(1.3); }
+
+  .card-jobs { border-top: 4px solid #0d6efd; }
+  .card-applications { border-top: 4px solid #198754; }
+  .card-interviews { border-top: 4px solid #ffc107; }
+  .card-chat { border-top: 4px solid #0dcaf0; }
+
+  .badge-notify {
+    position: absolute; top: 10px; right: 15px; padding: 5px 10px;
+    border-radius: 50%; animation: pulse 1.5s infinite; font-size: 0.8rem;
+  }
+  @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+  @keyframes float { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-5px);} }
+
+  /* Recent Activities Styling */
+  .list-group-item {
+    backdrop-filter: blur(8px);
+    transition: background-color 0.5s, color 0.5s;
+  }
+  body.light-mode .list-group-item { background-color: rgba(255,255,255,0.6); color:#212529; border:1px solid rgba(255,255,255,0.2); }
+  body.dark-mode .list-group-item { background-color: rgba(30,30,30,0.6); color:#f8f9fa; border:1px solid rgba(255,255,255,0.1); }
+</style>
+{% endblock %}

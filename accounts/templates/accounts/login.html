@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height:80vh;">
+  <div class="card shadow p-4" style="max-width: 450px; width: 100%;">
+    <h3 class="text-center mb-4">Login</h3>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <!-- Non-field errors -->
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        {% render_field form.username class="form-control" placeholder="Enter username" %}
+        {% if form.username.errors %}
+          <div class="text-danger small">{{ form.username.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        {% render_field form.password class="form-control" placeholder="Enter password" %}
+        {% if form.password.errors %}
+          <div class="text-danger small">{{ form.password.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Don’t have an account? <a href="{% url 'accounts:register' %}">Register here</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .card {
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+</style>
+{% endblock %}

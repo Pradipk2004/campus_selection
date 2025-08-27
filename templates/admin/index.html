@@ -1,0 +1,131 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Admin Dashboard</h1>
+
+    <div class="row g-4">
+
+        <!-- Total Students -->
+        <div class="col-md-3">
+            <div class="card shadow-sm dashboard-card border-0 bg-primary text-white p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Total Students</h5>
+                        <h3>{{ total_students }}</h3>
+                    </div>
+                    <i class="bi bi-person-badge fs-1"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Recruiters -->
+        <div class="col-md-3">
+            <div class="card shadow-sm dashboard-card border-0 bg-success text-white p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Total Recruiters</h5>
+                        <h3>{{ total_recruiters }}</h3>
+                    </div>
+                    <i class="bi bi-briefcase fs-1"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Jobs -->
+        <div class="col-md-3">
+            <div class="card shadow-sm dashboard-card border-0 bg-warning text-dark p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Total Jobs</h5>
+                        <h3>{{ total_jobs }}</h3>
+                    </div>
+                    <i class="bi bi-journal-check fs-1"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Applications -->
+        <div class="col-md-3">
+            <div class="card shadow-sm dashboard-card border-0 bg-info text-white p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Total Applications</h5>
+                        <h3>{{ total_applications }}</h3>
+                    </div>
+                    <i class="bi bi-card-checklist fs-1"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5>Applications by Job</h5>
+                <canvas id="applicationsChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5>Interviews Scheduled</h5>
+                <canvas id="interviewsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Applications by Job
+    const ctxApp = document.getElementById('applicationsChart').getContext('2d');
+    const applicationsChart = new Chart(ctxApp, {
+        type: 'bar',
+        data: {
+            labels: {{ job_labels|safe }},
+            datasets: [{
+                label: '# of Applications',
+                data: {{ applications_data|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Interviews Scheduled
+    const ctxInt = document.getElementById('interviewsChart').getContext('2d');
+    const interviewsChart = new Chart(ctxInt, {
+        type: 'line',
+        data: {
+            labels: {{ interview_dates|safe }},
+            datasets: [{
+                label: '# of Interviews',
+                data: {{ interview_counts|safe }},
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                tension: 0.3
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
+
+<style>
+    .dashboard-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+        border-radius: 0.5rem;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}

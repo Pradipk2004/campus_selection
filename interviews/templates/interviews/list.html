@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">📅 My Interviews</h2>
+
+  {% if interviews %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle shadow-sm rounded">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Job</th>
+            <th scope="col">Recruiter</th>
+            <th scope="col">Scheduled At</th>
+            <th scope="col">Meeting Link</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for interview in interviews %}
+            <tr>
+              <td>{{ interview.application.job.title }}</td>
+              <td>{{ interview.recruiter.username }}</td>
+              <td>{{ interview.scheduled_at|date:"M d, Y H:i" }}</td>
+              <td>
+                {% if interview.meeting_link %}
+                  <a href="{{ interview.meeting_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    Join
+                  </a>
+                {% else %}
+                  <span class="badge bg-secondary">N/A</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'interviews:detail' interview.pk %}" class="btn btn-sm btn-info">View</a>
+                {% if user.role == "recruiter" and interview.recruiter == user %}
+                  <a href="{% url 'interviews:edit' interview.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                  <a href="{% url 'interviews:cancel' interview.pk %}" class="btn btn-sm btn-danger">Cancel</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center shadow-sm">
+      No interviews scheduled yet.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

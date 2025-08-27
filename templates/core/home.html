@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1>Welcome to the Campus Selection System</h1>
+    <p class="lead">Manage jobs, applications, interviews, and chat with recruiters.</p>
+    <a href="{% url 'students:dashboard' %}" class="btn btn-primary btn-lg mt-3">Go to Dashboard</a>
+</div>
+{% endblock %}

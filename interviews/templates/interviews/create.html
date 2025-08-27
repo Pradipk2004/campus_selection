@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm dashboard-card p-4">
+
+    <h3 class="mb-4">Schedule Interview</h3>
+
+    {% if interview_exists %}
+      <div class="alert alert-warning">
+        An interview has already been scheduled for this application.
+      </div>
+      
+    {% else %}
+      <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary mt-3">Schedule</button>
+      </form>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

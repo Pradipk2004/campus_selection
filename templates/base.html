@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Campus Selection System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+    /* Smooth transitions */
+    body {
+        transition: background 0.5s, color 0.5s;
+        min-height: 100vh;
+    }
+
+    /* Light Mode Background */
+    body.light-mode {
+        background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1650&q=80') no-repeat center center fixed;
+        background-size: cover;
+        color: #212529;
+    }
+
+    /* Dark Mode Background */
+    body.dark-mode {
+        background: url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1650&q=80') no-repeat center center fixed;
+        background-size: cover;
+        color: #f8f9fa;
+    }
+
+    /* Overlay */
+    .background-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        transition: background-color 0.5s;
+    }
+    body.light-mode .background-overlay {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+    body.dark-mode .background-overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Navbar dynamic style */
+    .navbar {
+        transition: background-color 0.5s, color 0.5s;
+        backdrop-filter: blur(10px);
+    }
+    body.light-mode .navbar {
+        background-color: rgba(255, 255, 255, 0.6) !important;
+    }
+    body.dark-mode .navbar {
+        background-color: rgba(0, 0, 0, 0.6) !important;
+    }
+    body.light-mode .navbar .nav-link,
+    body.light-mode .navbar .navbar-brand {
+        color: #212529 !important;
+    }
+    body.dark-mode .navbar .nav-link,
+    body.dark-mode .navbar .navbar-brand {
+        color: #f8f9fa !important;
+    }
+
+    /* Dashboard Card Styling */
+    .dashboard-card {
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.5s, color 0.5s;
+        cursor: pointer;
+        position: relative;
+        border-radius: 12px;
+        padding: 25px;
+        backdrop-filter: blur(5px);
+    }
+    body.light-mode .dashboard-card {
+        background-color: rgba(255, 255, 255, 0.85);
+        color: #212529;
+    }
+    body.dark-mode .dashboard-card {
+        background-color: rgba(30, 30, 30, 0.85);
+        color: #f8f9fa;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    }
+    .dashboard-card i { transition: transform 0.3s; }
+    .dashboard-card:hover i { transform: scale(1.2); }
+
+    /* Footer dynamic style */
+    footer {
+        text-align: center;
+        padding: 15px 0;
+        position: relative;
+        width: 100%;
+        transition: background-color 0.5s, color 0.5s;
+        backdrop-filter: blur(10px);
+    }
+    body.light-mode footer {
+        background-color: rgba(255, 255, 255, 0.5);
+        color: #212529;
+    }
+    body.dark-mode footer {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #f8f9fa;
+    }
+
+    /* Toggle switch button */
+    .theme-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.5s;
+    }
+</style>
+</head>
+<body class="light-mode">
+<div class="background-overlay"></div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">Campus Selection System</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <!-- Dark/Light Mode Toggle -->
+                <li class="nav-item me-3">
+                    <button class="theme-toggle-btn" id="darkModeToggle">
+                        <span id="theme-icon">🌙</span>
+                        <span id="theme-text">Dark Mode</span>
+                    </button>
+                </li>
+
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Welcome, {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% if user.role == 'student' %}
+                            <li><a class="dropdown-item" href="{% url 'students:dashboard' %}">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'students:applications' %}">Applications</a></li>
+                            <li><a class="dropdown-item" href="{% url 'interviews:student_interviews' %}">My Interviews</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:edit_profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'students:chat' %}">Chat</a></li>
+                            
+                        {% elif user.role == 'recruiter' %}
+                            <li><a class="dropdown-item" href="{% url 'recruiters:dashboard' %}">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'recruiters:job_list' %}">Jobs</a></li>
+                            <li><a class="dropdown-item" href="{% url 'interviews:interviews' %}">Manage Interviews</a></li>
+                            <li><a class="dropdown-item" href="{% url 'recruiters:chat' %}">Chat</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link btn btn-outline-light me-2" href="{% url 'accounts:login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white" href="{% url 'accounts:register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main content -->
+<div class="container-fluid py-4">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Footer -->
+<footer>
+    &copy; {{ now.year }} Campus Selection System. All rights reserved.
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Dark/Light Mode Script -->
+<script>
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+    const body = document.body;
+
+    // Initialize based on localStorage
+    if (localStorage.getItem('mode') === 'dark') {
+        body.classList.replace('light-mode','dark-mode');
+        themeIcon.textContent = "☀️";
+        themeText.textContent = "Light Mode";
+    }
+
+    toggleBtn.addEventListener('click', function() {
+        if(body.classList.contains('light-mode')){
+            body.classList.replace('light-mode','dark-mode');
+            localStorage.setItem('mode','dark');
+            themeIcon.textContent = "☀️";
+            themeText.textContent = "Light Mode";
+        } else {
+            body.classList.replace('dark-mode','light-mode');
+            localStorage.setItem('mode','light');
+            themeIcon.textContent = "🌙";
+            themeText.textContent = "Dark Mode";
+        }
+    });
+</script>
+</body>
+</html>

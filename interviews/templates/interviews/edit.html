@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm dashboard-card p-4">
+    <h3 class="mb-4">Edit Interview</h3>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+      <a href="{% url 'interviews:detail' interview.pk %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

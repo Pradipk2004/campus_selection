@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="display-4 fw-bold">🎓 Welcome to the Campus Selection System</h1>
+    <p class="lead text-muted">Manage jobs, applications, interviews, and chat with recruiters in one place.</p>
+
+    <!-- Dashboard access form with CSRF -->
+    <form action="{% url 'students:dashboard' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-lg mt-3 shadow-sm px-4 py-2">
+            🚀 Go to Dashboard
+        </button>
+    </form>
+</div>
+{% endblock %}

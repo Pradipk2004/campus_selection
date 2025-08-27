@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height:80vh;">
+  <div class="card shadow p-4" style="max-width: 700px; width: 100%;">
+    <h3 class="text-center mb-4">Edit Profile</h3>
+    {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if form.errors %}
+  <div class="alert alert-danger">{{ form.errors }}</div>
+{% endif %}
+
+{% if profile_form and profile_form.errors %}
+  <div class="alert alert-danger">{{ profile_form.errors }}</div>
+{% endif %}
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <!-- USER FORM (username, email, first name, last name) -->
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        {% render_field form.username class="form-control" placeholder="Enter username" %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        {% render_field form.email class="form-control" placeholder="Enter email" %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">First Name</label>
+        {% render_field form.first_name class="form-control" placeholder="Enter first name" %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Last Name</label>
+        {% render_field form.last_name class="form-control" placeholder="Enter last name" %}
+      </div>
+
+      <!-- STUDENT PROFILE FORM -->
+      {% if user.role == 'student' %}
+        <hr>
+        <h5 class="mb-3">Student Profile</h5>
+
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          {% render_field profile_form.full_name class="form-control" placeholder="Enter full name" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Phone</label>
+          {% render_field profile_form.phone class="form-control" placeholder="Enter phone number" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Branch</label>
+          {% render_field profile_form.branch class="form-control" placeholder="Enter branch" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Year</label>
+          {% render_field profile_form.year class="form-control" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">CGPA</label>
+          {% render_field profile_form.cgpa class="form-control" placeholder="Enter CGPA" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Skills</label>
+          {% render_field profile_form.skills class="form-control" placeholder="Enter skills" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Resume</label>
+          {% render_field profile_form.resume class="form-control" %}
+        </div>
+      {% endif %}
+
+      <!-- RECRUITER PROFILE FORM -->
+      {% if user.role == 'recruiter' %}
+        <hr>
+        <h5 class="mb-3">Recruiter Profile</h5>
+
+        <div class="mb-3">
+          <label class="form-label">Company Name</label>
+          {% render_field profile_form.company_name class="form-control" placeholder="Enter company name" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Position</label>
+          {% render_field profile_form.position class="form-control" placeholder="Enter position" %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Contact Number</label>
+          {% render_field profile_form.contact_number class="form-control" placeholder="Enter contact number" %}
+        </div>
+      {% endif %}
+
+      <!-- Profile Picture -->
+      {% if profile_form.profile_picture %}
+        <div class="mb-3">
+          <label class="form-label">Profile Picture</label>
+          {% render_field profile_form.profile_picture class="form-control" %}
+        </div>
+      {% endif %}
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+    </form>
+
+    <p class="text-center mt-3">
+      <a href="{% url 'students:dashboard' %}">Back to Dashboard</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

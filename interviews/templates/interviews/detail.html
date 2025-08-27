@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm border-0 rounded">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">Interview Details</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Job:</strong> {{ object.application.job.title }}</p>
+      <p><strong>Recruiter:</strong> {{ object.recruiter.username }}</p>
+      <p><strong>Student:</strong> {{ object.application.student.username }}</p>
+      <p><strong>Scheduled At:</strong> {{ object.scheduled_at|date:"M d, Y H:i" }}</p>
+      <p><strong>Meeting Link:</strong>
+        {% if object.meeting_link %}
+          <a href="{{ object.meeting_link }}" target="_blank" class="btn btn-sm btn-outline-primary">Join Meeting</a>
+        {% else %}
+          <span class="badge bg-secondary">Not Provided</span>
+        {% endif %}
+      </p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <a href="{% url 'interviews:interviews' %}" class="btn btn-outline-secondary">⬅ Back to Interviews</a>
+      {% if user.role == "recruiter" and object.recruiter == user %}
+        <div>
+          <a href="{% url 'interviews:edit' object.pk %}" class="btn btn-warning">Edit</a>
+          <a href="{% url 'interviews:cancel' object.pk %}" class="btn btn-danger">Cancel</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
